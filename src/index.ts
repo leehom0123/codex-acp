@@ -17,6 +17,7 @@ import {
     SESSION_STEERING_METHOD,
 } from "./AcpExtensions";
 import {ASYNC_TASK_STOP_METHOD} from "./async-tasks/AsyncTaskExtension";
+import {SESSION_ARCHIVE_METHOD, SESSION_RENAME_METHOD, SESSION_UNARCHIVE_METHOD} from "./SessionIndex";
 
 const emptyExtensionParamsParser = z.preprocess(
     (params) => params ?? {},
@@ -48,6 +49,15 @@ const goalControlParamsParser = z.discriminatedUnion("action", [
 const asyncTaskStopParamsParser = z.object({
     sessionId: z.string().trim().min(1),
     asyncTaskId: z.string().trim().min(1),
+}).passthrough();
+
+const sessionRenameParamsParser = z.object({
+    sessionId: z.string(),
+    title: z.string(),
+}).passthrough();
+
+const sessionArchiveParamsParser = z.object({
+    sessionId: z.string(),
 }).passthrough();
 
 if (process.argv.includes("--version")) {
@@ -141,6 +151,7 @@ function startAcpServer() {
             const agent = createAgent(connection.client);
             codexAcpServer = agent;
             connection.signal.addEventListener("abort", () => {
+                agent.dispose();
                 if (codexAcpServer === agent) {
                     codexAcpServer = null;
                 }
@@ -169,5 +180,8 @@ function startAcpServer() {
         .onRequest(SESSION_STEERING_METHOD, sessionSteerParamsParser, (ctx) => getAgent().extMethod(SESSION_STEERING_METHOD, ctx.params))
         .onRequest(ASYNC_TASK_STOP_METHOD, asyncTaskStopParamsParser, (ctx) => getAgent().extMethod(ASYNC_TASK_STOP_METHOD, ctx.params))
         .onRequest(GOAL_CONTROL_METHOD, goalControlParamsParser, (ctx) => getAgent().extMethod(GOAL_CONTROL_METHOD, ctx.params))
+        .onRequest(SESSION_RENAME_METHOD, sessionRenameParamsParser, (ctx) => getAgent().renameSessionIndexEntry(ctx.params))
+        .onRequest(SESSION_ARCHIVE_METHOD, sessionArchiveParamsParser, (ctx) => getAgent().setSessionArchived(ctx.params, true))
+        .onRequest(SESSION_UNARCHIVE_METHOD, sessionArchiveParamsParser, (ctx) => getAgent().setSessionArchived(ctx.params, false))
         .connect(acpJsonStream);
 }
