@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.2.0](https://github.com/agentclientprotocol/codex-acp/compare/v2.1.1...v2.2.0) (2026-10-07)
+
+
+### Features
+
+* report the MCP servers that the Codex config replaces ([#587](https://github.com/agentclientprotocol/codex-acp/issues/587)) ([fbb15ad](https://github.com/agentclientprotocol/codex-acp/commit/fbb15adc6ff5a821543818e48170ee0b006a8fc7))
+* show live MCP server status and reconnect from /mcp ([#579](https://github.com/agentclientprotocol/codex-acp/issues/579)) ([ca1d971](https://github.com/agentclientprotocol/codex-acp/commit/ca1d97173ad37b471d5a4e5847725a4657d34e29))
+
+
+### Bug Fixes
+
+* update codex to 0.160.1 ([#586](https://github.com/agentclientprotocol/codex-acp/issues/586)) ([cf83291](https://github.com/agentclientprotocol/codex-acp/commit/cf83291d3f35821c89308985f8b123f0d283ae48))
+
 ## [2.1.1](https://github.com/agentclientprotocol/codex-acp/compare/v2.1.0...v2.1.1) (2026-10-01)
 
 
